@@ -1,0 +1,40 @@
+
+Service Request: Ticket
+
+Main - Modules
+Create:
+Method: [POST]
+{{url}}/api/ticket
+
+LIST:
+Method: [GET]
+{{url}}/api/ticket?status=
+
+# tkt = ticket
+ticket_id
+ticket_name
+ticket_description
+
+created_at
+updated_at
+
+UPDATE:
+Method: [PUT]
+{{url}}/api/ticket/{ticket_id}
+
+In Rare scenario:
+Body{
+    ticket_id:
+}
+
+Method: [DELETE]
+{{url}}/api/ticket/{ticket_id}
+
+sub - Modules
+Create:
+Method: [POST]
+{{url}}/api/ticket-assign
+{
+    "ticket_id":"",
+    "user_id":""
+}
