@@ -9,7 +9,7 @@ var {
 
 router.post("/signin", createTicket);
 router.get("/Show", listOfTickets);
-router.delete("/delete/:id", removeOfTickets);
+router.delete("/delete", removeOfTickets);
 router.patch("/update",updateOfTickets)
 // router.get('/Showw',showw);
 

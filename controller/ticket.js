@@ -65,20 +65,29 @@ const listOfTickets = (req, res) => {
   }
 };
 const updateOfTickets = (req, res) => {
-  console.log(req.query);
-  Ticket.findByIdAndUpdate( {_id:req.query.id},{status: req.query.status}).then((data) => {
-    res.status(200).send({
-      status: true,
-      statuscode: 200,
-      message: "ticket successfully updated",
-      ticket: data,
+  if (req.query.role === "Admin") {
+    Ticket.findByIdAndUpdate(
+      { _id: req.query.id },
+      { status: req.query.status }
+    ).then((data) => {
+      res.status(200).send({
+        status: true,
+        statuscode: 200,
+        message: "ticket successfully updated",
+        ticket: data,
+      });
     });
-  });
+  } 
+  if(req.query.role ==="customer"){
+    res.send("customer cannot change status");
+    console.log("customer cannot change status");
+  }
+  
 };
 
 // remove list
 const removeOfTickets = (req, res) => {
-  Ticket.findByIdAndRemove({_id: req.query.status}).then((data) => {
+  Ticket.findByIdAndRemove({ _id: req.query.id}).then((data) => {
     res.status(200).send({
       status: true,
       statuscode: 200,
@@ -88,4 +97,9 @@ const removeOfTickets = (req, res) => {
   });
 };
 
-module.exports = { createTicket, listOfTickets, removeOfTickets,updateOfTickets };
+module.exports = {
+  createTicket,
+  listOfTickets,
+  removeOfTickets,
+  updateOfTickets,
+};
