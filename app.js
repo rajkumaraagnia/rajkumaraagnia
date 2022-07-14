@@ -4,9 +4,12 @@ const cookieParser = require("cookie-parser");
 var express = require("express");
 var user = require("./routes/user");
 var ticket = require("./routes/ticket");
+var multer = require('multer');
 
 var app = express();
 const port = 3000;
+var fs = require('fs'); 
+var path = require('path'); 
 require("dotenv").config();
 var mongoose = require("mongoose");
 // models not import
@@ -27,8 +30,8 @@ mongoose.connect(
     app.use(cookieParser());
     app.use(cors());
     // middleware routes
-    app.use("/pots", user);
-    app.use("/pots", ticket);
+    app.use("/api", user);
+    app.use("/api", ticket);
   }
 );
 app.listen(port, () => {

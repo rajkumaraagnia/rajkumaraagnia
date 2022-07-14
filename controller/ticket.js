@@ -4,13 +4,22 @@ const Ticket = require("../models/ticket");
 const User = require("../models/user");
 
 const createTicket = (req, res) => {
+  var date = new Date();
+  var da = date.getUTCFullYear();
+  var gg = date.getUTCDate();
+  var mm = date.getUTCMonth();
+  var hours = date.getUTCHours();
+  var minutes = date.getUTCMinutes();
+  var seconds = date.getUTCSeconds();
+
   const ticket = new Ticket({
     ticketname: req.body.ticketname,
     customerID: req.body.customerID,
     status: req.body.status,
     type: req.body.type,
     description: req.body.description,
-    date: new Date().getUTCDate(),
+    date:
+      da + "-" + mm + "_" + gg + "T" + hours + ":" + minutes + ":" + seconds,
   });
   ticket
     .save()
@@ -77,17 +86,16 @@ const updateOfTickets = (req, res) => {
         ticket: data,
       });
     });
-  } 
-  if(req.query.role ==="customer"){
+  }
+  if (req.query.role === "customer") {
     res.send("customer cannot change status");
     console.log("customer cannot change status");
   }
-  
 };
 
 // remove list
 const removeOfTickets = (req, res) => {
-  Ticket.findByIdAndRemove({ _id: req.query.id}).then((data) => {
+  Ticket.findByIdAndRemove({ _id: req.query.id }).then((data) => {
     res.status(200).send({
       status: true,
       statuscode: 200,

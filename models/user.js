@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs"); encrypt &bcrypt did not use in models
+
 const { Schema } = mongoose;
 const userSchema = new Schema(
   {
@@ -25,20 +26,12 @@ const userSchema = new Schema(
     date: {
       type: String,
     },
+    avatar:
+    {
+        type: String,
+    }
   },
   { versionKey: false }
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    next();
-  }
-  this.password = await bcrypt.hash(this.password,10);
-  // this. passwordmatch =await bcrypt.compare(this.passwordmatch,this.password);
-  //  console.log(this.passwordmatch);
-});
-// userSchema.methods.comparePassword =async function(yourPasssword){
-//   return await bcrypt.compare(yourPasssword,this.password);
-
-// }
 module.exports = mongoose.model("User", userSchema);

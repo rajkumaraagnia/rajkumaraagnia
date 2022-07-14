@@ -6,11 +6,11 @@ var {
   removeOfTickets,
   updateOfTickets,
 } = require("../controller/ticket");
+const { tokenValidator } = require("../tokenHelper/token");
 
-router.post("/signin", createTicket);
-router.get("/Show", listOfTickets);
-router.delete("/delete", removeOfTickets);
-router.patch("/update",updateOfTickets)
-// router.get('/Showw',showw);
+router.post("/tickets_signin", tokenValidator, createTicket);
+router.get("/tickets_list", tokenValidator, listOfTickets);
+router.delete("/tickets_delete", tokenValidator, removeOfTickets);
+router.patch("/tickets_update", tokenValidator, updateOfTickets);
 
 module.exports = router;
