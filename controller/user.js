@@ -23,10 +23,21 @@ const createUser = async (req, res) => {
 
   
   });
+//  single file upload
 
-  if(req.file){
-    user.avatar=req.file.path
+// if(req.file){
+  // user.avatar=req.files.path
+
+  // multiple file upload
+  if(req.files){
+    let path =''
+    req.files.forEach(function(files,index,arr){
+      path =path+files.path+','
+    })
+    path=path.substring(0,path.lastIndexOf(','))
+    user.avatar=path
   }
+  // end
   user
     .save()
     .then((data) => {

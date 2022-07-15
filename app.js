@@ -5,6 +5,9 @@ var express = require("express");
 var user = require("./routes/user");
 var ticket = require("./routes/ticket");
 var multer = require('multer');
+const { Translate } = require("@google-cloud/translate").v2;
+
+
 
 var app = express();
 const port = 3000;
@@ -29,6 +32,9 @@ mongoose.connect(
     app.use(bodyParser.json());
     app.use(cookieParser());
     app.use(cors());
+    // upload files
+    app.use("/uploads",express.static('uploads'))
+
     // middleware routes
     app.use("/api", user);
     app.use("/api", ticket);

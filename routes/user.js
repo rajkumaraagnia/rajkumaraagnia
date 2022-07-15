@@ -9,9 +9,13 @@ var {
   loginOfUser,
 } = require("../controller/user");
 const { tokenValidator } = require("../tokenHelper/token");
+// file upload import
 const upload   =require ('../middleware/upload')
+// add single file upload method     upload.single('avatar')
 
-router.post("/user_login",upload.single('avatar'), tokenValidator, createUser);
+router.post("/user_login",upload.array('avatar'), tokenValidator, createUser);
+
+
 router.get("/user_list", tokenValidator, listOfUser);
 router.put("/user_update", tokenValidator, updateOfUser);
 router.delete("/user_delete", tokenValidator, removeOfUser);

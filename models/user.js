@@ -26,9 +26,11 @@ const userSchema = new Schema(
     date: {
       type: String,
     },
+    // file upload
     avatar:
     {
         type: String,
+        required:true,
     }
   },
   { versionKey: false }

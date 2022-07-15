@@ -9,22 +9,22 @@ var storage = multer.diskStorage({
     }, 
     filename: function (req, file, cb) { 
         let ext =path.extname(file.originalname)
-       cb(null ,Date.now()+ext);   
+       cb(null , file.fieldname + '-' +Date.now()+ext);   
     }
  });
 
 
  const upload = multer({
     storage: storage,
-    fileFilter:function (req, file, cb) {  
-        if (file.mimetype == "image/png"||file.mimetype == "image/jpg") {
-            cb(null,true)
+    // fileFilter:function (req, file, cb) {  
+    //     if (file.mimetype == "image/png"||file.mimetype == "image/jpg") {
+    //         cb(null,true)
             
-        }else{
-            console.log('only png & jpg file support');
-            cb(null,false)
-        }
-    },
-    limits : {fileSize : 1000000}
+    //     }else{
+    //         console.log('only png & jpg file support');
+    //         cb(null,false)
+    //     }
+    // },
+    limits : {fileSize : 5000000}
 });
  module.exports=upload
