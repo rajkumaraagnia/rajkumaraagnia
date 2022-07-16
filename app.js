@@ -5,7 +5,9 @@ var express = require("express");
 var user = require("./routes/user");
 var ticket = require("./routes/ticket");
 var multer = require('multer');
-const { Translate } = require("@google-cloud/translate").v2;
+// const { Translate } = require("@google-cloud/translate").v2;
+const translate = require('google-translate-api');
+
 
 
 

@@ -7,37 +7,60 @@ const bcrypt = require("bcryptjs");
 const user = require("../models/user");
 const { tokenGenerate } = require("../tokenHelper/token");
 const { tokenValidator } = require("../tokenHelper/token");
-var multer = require("multer");
+// var multer = require("multer");
+const translate = require("@vitalets/google-translate-api");
+
 const SuccessResponse = responsejs.successResponse;
 
 // create user
 const createUser = async (req, res) => {
   const value = await bcrypt.hash(req.body.password, 10);
+
+  const name = req.body.username;
+  const cont = req.body.content;
+  const lang = await translate(cont, { to: req.body.language });
+
+  console.log(lang.text);
   // value=req.body.password
-   const user = new User({
-    username: req.body.username,
+  const user = new User({
+    username: name,
     emailid: req.body.emailid,
     password: value,
     role: req.body.role,
     date: new Date(),
-
-  
+    content: cont.text,
+    language: lang.text,
   });
-//  single file upload
+  //  single file upload
 
-// if(req.file){
+  // if(req.file){
   // user.avatar=req.files.path
 
   // multiple file upload
-  if(req.files){
-    let path =''
-    req.files.forEach(function(files,index,arr){
-      path =path+files.path+','
-    })
-    path=path.substring(0,path.lastIndexOf(','))
-    user.avatar=path
+  if (req.files) {
+    let path = "";
+    req.files.forEach(function (files, index, arr) {
+      path = path + files.path + ",";
+    });
+    path = path.substring(0, path.lastIndexOf(","));
+    user.avatar = path;
   }
   // end
+
+  // translate
+  // (async ()=>{
+  //   try {
+  //     const res = await translate('welcome', { to: 'hi' })
+  //     console.log(res.text);
+  //     console.log(res.from.language.iso);
+  //   }
+  //   catch (error){
+  //     console.log(error)
+  //   }
+  // })()
+
+  //end
+
   user
     .save()
     .then((data) => {
@@ -57,9 +80,13 @@ const createUser = async (req, res) => {
 //     });
 //   });
 // };
-const listOfUser = (req, res) => {
+
+const listOfUser = async (req, res) => {
+  // const lang =await translate (data,{to:"ta"})
+
   let user = req.query;
   const str = user.role;
+
   const str2 = str.charAt(0).toUpperCase() + str.slice(1);
   const str3 = str.charAt(0).toLowerCase() + str.slice(1);
   console.log(str2);
@@ -68,7 +95,7 @@ const listOfUser = (req, res) => {
       res.status(200).send({
         status: true,
         statuscode: 200,
-        message: " ticket successfully listed",
+        message: " users successfully listed",
         User: data,
       });
     });
@@ -79,7 +106,7 @@ const listOfUser = (req, res) => {
       res.status(200).send({
         status: true,
         statuscode: 200,
-        message: "successfully listed all tickets",
+        message: "successfully listed all users",
         User: data,
       });
     });

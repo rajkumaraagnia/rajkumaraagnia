@@ -1,3 +1,4 @@
+const { languages } = require("@vitalets/google-translate-api");
 const mongoose = require("mongoose");
 // const bcrypt = require("bcryptjs"); encrypt &bcrypt did not use in models
 
@@ -27,10 +28,15 @@ const userSchema = new Schema(
       type: String,
     },
     // file upload
-    avatar:
-    {
-        type: String,
-        required:true,
+    avatar: {
+      type: String,
+      required: true,
+    },
+    conent: {
+      type: String,
+    },
+    language:{
+      type:String
     }
   },
   { versionKey: false }
