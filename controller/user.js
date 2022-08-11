@@ -17,10 +17,13 @@ const createUser = async (req, res) => {
   const value = await bcrypt.hash(req.body.password, 10);
 
   const name = req.body.username;
-  const cont = req.body.content;
-  const lang = await translate(cont, { to: req.body.language });
-
-  console.log(lang.text);
+  // const cont = req.body.content;
+  // const lan = req.body.language;
+  // const lang = await translate(cont, { to: lan });
+  // const langu = await translate(name, { to: lan })
+  // console.log(lan);
+  // console.log(langu.text);
+  // console.log(lang.text);
   // value=req.body.password
   const user = new User({
     username: name,
@@ -28,8 +31,8 @@ const createUser = async (req, res) => {
     password: value,
     role: req.body.role,
     date: new Date(),
-    content: cont.text,
-    language: lang.text,
+    // content: lang.text,
+    // language: lan.text,
   });
   //  single file upload
 
@@ -82,33 +85,72 @@ const createUser = async (req, res) => {
 // };
 
 const listOfUser = async (req, res) => {
-  // const lang =await translate (data,{to:"ta"})
-
   let user = req.query;
   const str = user.role;
-
   const str2 = str.charAt(0).toUpperCase() + str.slice(1);
   const str3 = str.charAt(0).toLowerCase() + str.slice(1);
   console.log(str2);
+
+  console.log(user);
+  console.log(str);
   if (str2 === "Admin") {
-    User.find({}).then((data) => {
+    User.find({}).then(async (data) => {
+      const nameValue = [];
+      console.log(data.length);
+      for (let i = 0; i < data.length; i++) {
+        const langu = await translate(data[i].username, { to: "ta" });
+        data[i].username = langu.text;
+        console.log(i);
+        nameValue.push(data[i]);
+      }
+
       res.status(200).send({
         status: true,
         statuscode: 200,
         message: " users successfully listed",
-        User: data,
+        User: nameValue,
       });
     });
   }
-  console.log(str3);
+  //   console.log(str3);
+  //   if (str3 === "customer") {
+  //     User.find({ _id: user._id }).then((data) => {
+  //     console.log(data);
+  //       res.status(200).send({
+  //         status: true,
+  //         statuscode: 200,
+  //         message: "successfully listed all users",
+  //         User: data,
+  //       });
+  //     });
+  //   }
+  // };
+
+  // demo
   if (str3 === "customer") {
-    User.find({ _id: user._id }).then((data) => {
-      res.status(200).send({
-        status: true,
-        statuscode: 200,
-        message: "successfully listed all users",
-        User: data,
-      });
+    // console.log("sdfgjfdgsdkjg");
+    const data = await User.find({ });
+    const val = await Promise.all(
+      data.map(async (e) => {
+        const langu = await translate(e.username, {
+          to: req.query.language,
+        });
+        const role = await translate(e.role, {
+          to: req.query.language,
+        });
+        e.username = langu.text;
+        e.role = role.text;
+
+        // console.log(data)
+        return e;
+      })
+    );
+    console.log("sdfsf", val);
+    res.status(200).send({
+      status: true,
+      statuscode: 200,
+      message: "successfully listed all users",
+      User: val,
     });
   }
 };

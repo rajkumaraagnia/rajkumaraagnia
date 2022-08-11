@@ -32,9 +32,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    conent: {
-      type: String,
-    },
+    // content: {
+    //   type: String,
+    //   required:true,
+    // },
     language:{
       type:String
     }
