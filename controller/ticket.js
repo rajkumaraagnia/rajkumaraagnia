@@ -1,4 +1,5 @@
 // const ticket = require("../models/ticket");
+const { closeDelimiter } = require("ejs");
 const Ticket = require("../models/ticket");
 // const user = require("../models/user");
 const User = require("../models/user");
@@ -49,6 +50,7 @@ const listOfTickets = (req, res) => {
   if (req.query.status) {
     Ticket.find({ status: req.query.status }).then((data) => {
       // User.find({ _id: req.body.customerID }).then((ds) => {
+
       res.status(200).send({
         status: true,
         statuscode: 200,
@@ -59,9 +61,18 @@ const listOfTickets = (req, res) => {
     });
     // });
   }
+  let open;
   if (!req.query.status) {
-    Ticket.find({}).then((data) => {
+    Ticket.aggregate([
+      {
+        $match: {
+          ticketname: req.query.ticketname,
+        },
+      },
+    ]).then((data) => {
       // User.find({}).then((ds) => {
+
+      console.log(data);
       res.status(200).send({
         status: true,
         statuscode: 200,

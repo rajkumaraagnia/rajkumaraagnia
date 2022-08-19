@@ -9,13 +9,22 @@ const { tokenGenerate } = require("../tokenHelper/token");
 const { tokenValidator } = require("../tokenHelper/token");
 // var multer = require("multer");
 const translate = require("@vitalets/google-translate-api");
+var fs = require("fs");
 
 const SuccessResponse = responsejs.successResponse;
 
 // create user
 const createUser = async (req, res) => {
   const value = await bcrypt.hash(req.body.password, 10);
-
+  let pathh = "./uploads/items.png";
+  require("fs").writeFile(
+    pathh,
+    req.body.base64images,
+    "base64",
+    function (err) {
+      console.log(err);
+    }
+  );
   const name = req.body.username;
   // const cont = req.body.content;
   // const lan = req.body.language;
@@ -31,13 +40,14 @@ const createUser = async (req, res) => {
     password: value,
     role: req.body.role,
     date: new Date(),
-    // content: lang.text,
+    base64images: pathh,
+
     // language: lan.text,
   });
   //  single file upload
 
-  // if(req.file){
-  // user.avatar=req.files.path
+  // if (req.file) {
+  //   user.avatar = req.files.path;
 
   // multiple file upload
   if (req.files) {
@@ -48,6 +58,24 @@ const createUser = async (req, res) => {
     path = path.substring(0, path.lastIndexOf(","));
     user.avatar = path;
   }
+  // image to base64 to image
+
+  // var imageAsBase64 = fs.readFileSync(path, "base64");
+  // console.log(imageAsBase64);
+  // var buffer = Buffer.from(imageAsBase64, "base64");
+  // fs.writeFileSync("./base64images/screennn.jpg", buffer);
+  /////////////////////////////////////////////////////////////////
+  // if (req.body.base64images) {
+  //   let path = "";
+  //   req.base64images.require("fs").writeFile(function (file, index, arr) {
+  //     path = path + files.path + ",";
+  //   });
+  //   path = path.substring(0, path.lastIndexOf(","));
+  //   user.base64images = path;
+  //   console.log(path);
+  // }
+  /////////////////////////////////////////////////////////////////////
+
   // end
 
   // translate
@@ -89,28 +117,33 @@ const listOfUser = async (req, res) => {
   const str = user.role;
   const str2 = str.charAt(0).toUpperCase() + str.slice(1);
   const str3 = str.charAt(0).toLowerCase() + str.slice(1);
-  console.log(str2);
+  // console.log(str2);
 
-  console.log(user);
-  console.log(str);
+  // console.log(user);
+  // console.log(str);
   if (str2 === "Admin") {
-    User.find({}).then(async (data) => {
-      const nameValue = [];
-      console.log(data.length);
-      for (let i = 0; i < data.length; i++) {
-        const langu = await translate(data[i].username, { to: "ta" });
-        data[i].username = langu.text;
-        console.log(i);
-        nameValue.push(data[i]);
-      }
+    const { page = 1, limit = 10 } = req.query;
+    User.find({})
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .then(async (data) => {
+        const nameValue = [];
+        console.log(data.length);
+        for (let i = 0; i < data.length; i++) {
+          const langu = await translate(data[i].username, { to: "ta" });
+          data[i].username = langu.text;
+          console.log(i);
+          nameValue.push(data[i]);
+        }
 
-      res.status(200).send({
-        status: true,
-        statuscode: 200,
-        message: " users successfully listed",
-        User: nameValue,
+        res.status(200).send({
+          total: nameValue.length,
+          status: true,
+          statuscode: 200,
+          message: " users successfully listed",
+          User: nameValue,
+        });
       });
-    });
   }
   //   console.log(str3);
   //   if (str3 === "customer") {
@@ -129,7 +162,7 @@ const listOfUser = async (req, res) => {
   // demo
   if (str3 === "customer") {
     // console.log("sdfgjfdgsdkjg");
-    const data = await User.find({ });
+    const data = await User.find({});
     const val = await Promise.all(
       data.map(async (e) => {
         const langu = await translate(e.username, {
@@ -147,6 +180,7 @@ const listOfUser = async (req, res) => {
     );
     console.log("sdfsf", val);
     res.status(200).send({
+      total: val.length,
       status: true,
       statuscode: 200,
       message: "successfully listed all users",

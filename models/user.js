@@ -14,7 +14,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
+      // unique: true,
     },
     password: {
       type: String,
@@ -30,15 +30,13 @@ const userSchema = new Schema(
     // file upload
     avatar: {
       type: String,
-      required: true,
     },
-    // content: {
-    //   type: String,
-    //   required:true,
-    // },
-    language:{
-      type:String
-    }
+    base64images: {
+      type: String,
+    },
+    language: {
+      type: String,
+    },
   },
   { versionKey: false }
 );
