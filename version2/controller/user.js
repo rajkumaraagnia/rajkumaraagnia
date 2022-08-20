@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
   // password bcrypt
   const value = await bcrypt.hash(req.body.password, 10);
   // base64 to image store in path from db
-  let pathh = "./uploads/items10.png";
+  let pathh = "./uploads/items22.png";
   require("fs").writeFile(
     pathh,
     req.body.base64images,
@@ -44,6 +44,7 @@ const createUser = async (req, res) => {
     role: req.body.role,
     date: new Date(),
     base64images: pathh,
+    gender: req.body.gender,
     // language: lan.text,
   });
   //  single file upload

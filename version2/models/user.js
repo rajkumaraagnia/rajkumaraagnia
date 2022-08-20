@@ -30,7 +30,6 @@ const userSchema = new Schema(
     // file upload
     avatar: {
       type: String,
-      required: true,
     },
     base64images: {
       type: String,
@@ -38,8 +37,13 @@ const userSchema = new Schema(
     language: {
       type: String,
     },
+
+    gender: {
+      type: String,
+      required: true,
+    },
   },
   { versionKey: false }
 );
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Userv2", userSchema);
