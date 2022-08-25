@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
   // password bcrypt
   const value = await bcrypt.hash(req.body.password, 10);
   // base64 to image store in path from db
-  let pathh = "./uploads/items10.png";
+  let pathh = "./uploads/profile.png ";
   require("fs").writeFile(
     pathh,
     req.body.base64images,
@@ -134,7 +134,7 @@ const listOfUser = async (req, res) => {
         for (let i = 0; i < data.length; i++) {
           const langu = await translate(data[i].username, { to: "ta" });
           data[i].username = langu.text;
-          console.log(i);
+          // console.log(i);
           nameValue.push(data[i]);
         }
 
@@ -219,7 +219,7 @@ const removeOfUser = async (req, res) => {
 // login user
 const loginOfUser = async (req, res) => {
   await user.find({ emailid: req.body.emailid }).then(async (data) => {
-    // console.log(data.length);
+    console.log(data.length);
     if (data.length === 0) {
       return res.send({
         status: false,
@@ -227,9 +227,9 @@ const loginOfUser = async (req, res) => {
         message: "Emailid invalid",
       });
     }
-    // console.log(data[0].password);
+    console.log(data[0].password);
     const com = await bcrypt.compare(req.body.password, data[0].password);
-    // console.log(com)
+    console.log(com);
     if (com === true) {
       // token generate always login only
       const token = await tokenGenerate(user.emailid);

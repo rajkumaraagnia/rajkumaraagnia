@@ -8,9 +8,9 @@ const tokenGenerate = (emailid) => {
 const tokenValidator = async (req, res, next) => {
   try {
     const bearer = req.headers.authorization.replace("Bearer ", "");
-    //   console.log(bearer);
+    console.log(bearer);
     const verified = jwt.verify(bearer, process.env.JWT_KEY);
-    //   console.log(verified);
+    console.log(verified);
     next();
   } catch (error) {
     return res.send(error);
